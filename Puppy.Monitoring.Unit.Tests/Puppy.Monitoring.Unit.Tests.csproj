@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3F309E00-613C-4E84-B7A8-0CF1E0A2F896}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Puppy.Monitoring.Unit.Tests</RootNamespace>
+    <AssemblyName>Puppy.Monitoring.Unit.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\packages\xunit.1.9.1\lib\net20\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.bdd">
+      <HintPath>..\..\packages\xUnit.BDD.1.9.1.1\lib\net35\xunit.bdd.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\build\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Tracking\when_tracking_an_external_call.cs" />
+    <Compile Include="_helpers\AnotherTestEvent.cs" />
+    <Compile Include="_helpers\EventSpecificPipeline.cs" />
+    <Compile Include="_helpers\EventTypeSpecificPublisher.cs" />
+    <Compile Include="_helpers\GeneratesOneEventOnInitialFlowPipelet.cs" />
+    <Compile Include="_helpers\PublishedEventListener.cs" />
+    <Compile Include="_helpers\SampleCustomEvent.cs" />
+    <Compile Include="_helpers\SamplePipelet.cs" />
+    <Compile Include="_helpers\TestEvent.cs" />
+    <Compile Include="_helpers\TestEventSpecification.cs" />
+    <Compile Include="_helpers\TestPipelineAdapter.cs" />
+    <Compile Include="Adapters\Default\when_an_event_type_specific_pipeline_is_registered.cs" />
+    <Compile Include="Adapters\Default\when_a_type_agnostic_pipeline_and_type_specific_pipeline_is_registered.cs" />
+    <Compile Include="Adapters\Default\when_a_type_agnostic_pipeline_is_registered.cs" />
+    <Compile Include="Adapters\Default\when_a_type_specific_pipeline_is_registered_but_another_event_type_is_published.cs" />
+    <Compile Include="Adapters\Default\when_multiple_pipelines_are_registered.cs" />
+    <Compile Include="Adapters\Default\when_no_pipeline_are_registered.cs" />
+    <Compile Include="Adapters\Default\when_trying_to_register_a_null_pipeline_as_a_generic_pipeline.cs" />
+    <Compile Include="Adapters\Default\when_trying_to_register_a_null_pipeline_as_a_type_specific_pipeline.cs" />
+    <Compile Include="Building\when_reporting_a_failure_event.cs" />
+    <Compile Include="Building\when_reporting_a_success_event.cs" />
+    <Compile Include="Filters\when_filtering_an_event_based_on_category.cs" />
+    <Compile Include="Filters\when_filtering_an_event_based_on_category_and_time_the_event_took_and_there_is_a_match.cs" />
+    <Compile Include="Filters\when_filtering_an_event_based_on_category_and_time_the_event_took_and_the_category_is_different.cs" />
+    <Compile Include="Filters\when_filtering_an_event_based_on_category_and_time_the_event_took_and_the_time_is_less_than_the_event_timning.cs" />
+    <Compile Include="Pipelines\Pipelets\Actions\when_flowing_an_event_through_the_action_pipelet.cs" />
+    <Compile Include="Pipelines\Pipelets\Counting\when_flowing_an_event_through_the_counting_pipelet.cs" />
+    <Compile Include="Pipelines\Pipelets\Notification\when_flowing_an_event_through_the_notification_pipelet_and_filter_is_not_valid.cs" />
+    <Compile Include="Pipelines\Pipelets\Notification\when_flowing_an_event_through_the_notification_pipelet_and_filter_is_valid.cs" />
+    <Compile Include="Pipelines\Pipelets\Counting\when_flowing_an_event_through_the_specific_event_counting_pipelet.cs" />
+    <Compile Include="Pipelines\when_flowing_an_event_through_a_complete_event_and_reflow_pipeline.cs" />
+    <Compile Include="Pipelines\when_flowing_an_event_through_a_linear_pipe.cs" />
+    <Compile Include="Pipelines\when_flowing_an_event_through_a_queued_pipeline.cs" />
+    <Compile Include="Pipelines\when_flowing_an_event_through_a_reflow_on_event_pipeline.cs" />
+    <Compile Include="Pipelines\when_flowing_an_event_to_the_publishing_pipelet.cs" />
+    <Compile Include="Publishing\Default\BinaryFilePublishing\when_publishing_an_event_to_the_binary_file_publisher.cs" />
+    <Compile Include="Publishing\Default\BinaryFilePublishing\when_publishing_a_null_event_to_the_binary_file_publisher.cs" />
+    <Compile Include="Publishing\when_a_null_event_is_published.cs" />
+    <Compile Include="Publishing\when_no_publishing_context_is_set.cs" />
+    <Compile Include="Publishing\when_publishing_an_event.cs" />
+    <Compile Include="Adapters\when_publishing_an_event_and_the_pipeline_adapter_is_not_available.cs" />
+    <Compile Include="Reporting\CustomEvent\when_reporting_a_custom_event.cs" />
+    <Compile Include="Reporting\Failure\when_reporting_a_failure_event.cs" />
+    <Compile Include="Reporting\Failure\when_reporting_a_failure_event_with_category.cs" />
+    <Compile Include="Reporting\Failure\when_reporting_a_failure_event_with_category_and_no_category_explicitly_specified.cs" />
+    <Compile Include="Reporting\Failure\when_reporting_a_failure_event_with_category_and_sub_category.cs" />
+    <Compile Include="Reporting\Success\when_reporting_a_success_event.cs" />
+    <Compile Include="Reporting\Success\when_reporting_a_success_event_with_category.cs" />
+    <Compile Include="Reporting\Success\when_reporting_a_success_event_with_category_and_no_category_explicitly_specified.cs" />
+    <Compile Include="Reporting\Success\when_reporting_a_success_event_with_category_and_sub_category.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Puppy.Monitoring\Puppy.Monitoring.csproj">
+      <Project>{61A85473-6DE5-4BCA-8508-D6395949A297}</Project>
+      <Name>Puppy.Monitoring</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pipelines\Pipelets\Publishing\" />
+    <Folder Include="Pipelines\Pipelets\Splitters\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

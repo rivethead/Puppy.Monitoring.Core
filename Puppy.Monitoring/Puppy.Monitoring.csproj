@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{61A85473-6DE5-4BCA-8508-D6395949A297}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Puppy.Monitoring</RootNamespace>
+    <AssemblyName>Puppy.Monitoring</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\packages\Common.Logging.2.1.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\build\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Adapters\Default\IContainPipelines.cs" />
+    <Compile Include="Adapters\Default\ManualPipelineAdapter.cs" />
+    <Compile Include="Adapters\Default\NullPipelineAdapter.cs" />
+    <Compile Include="Adapters\Default\TypeAgnosticPipelineContainer.cs" />
+    <Compile Include="Adapters\Default\TypeSpecificPipelineContainer.cs" />
+    <Compile Include="Builders\CustomEventReportingBuilder.cs" />
+    <Compile Include="Builders\IBuildReportingEvent.cs" />
+    <Compile Include="Builders\FailureEventReportingBuilder.cs" />
+    <Compile Include="Builders\ReportingEventEchoBuilder.cs" />
+    <Compile Include="CustomReportInfoCollector.cs" />
+    <Compile Include="Events\ActionTriggeredEvent.cs" />
+    <Compile Include="Events\Categorisation.cs" />
+    <Compile Include="Events\Event.cs" />
+    <Compile Include="Events\EventTiming.cs" />
+    <Compile Include="Events\ExternalServiceCalledFailureEvent.cs" />
+    <Compile Include="Events\ExternalServiceCallSuccessEvent.cs" />
+    <Compile Include="Events\FailureEvent.cs" />
+    <Compile Include="Events\IAdminEvent.cs" />
+    <Compile Include="Events\IEvent.cs" />
+    <Compile Include="Events\NoopEvent.cs" />
+    <Compile Include="Events\NotificationRaisedEvent.cs" />
+    <Compile Include="Events\NullReportEvent.cs" />
+    <Compile Include="Events\NumberOfEventsEvent.cs" />
+    <Compile Include="Events\NumberOfSpecificEventEvent.cs" />
+    <Compile Include="Events\SuccessEvent.cs" />
+    <Compile Include="Events\TimeBuckets.cs" />
+    <Compile Include="Events\Timings.cs" />
+    <Compile Include="Events\ListOfEvents.cs" />
+    <Compile Include="Measure.cs" />
+    <Compile Include="MeasurementInfoCollector.cs" />
+    <Compile Include="MeasurementInfoCollectorWithReturn.cs" />
+    <Compile Include="Pipeline\BasePipeline.cs" />
+    <Compile Include="Pipeline\CompleteAndReflowPipeline.cs" />
+    <Compile Include="Pipeline\Pipelets\Actions\ITriggerActionBasedOnEvent.cs" />
+    <Compile Include="Pipeline\Pipelets\Actions\NullTrigger.cs" />
+    <Compile Include="Pipeline\Pipelets\Actions\WriteToLoggingActionTrigger.cs" />
+    <Compile Include="Pipeline\Pipelets\BasePipelet.cs" />
+    <Compile Include="Pipeline\Pipelets\Counting\InMemoryCounter.cs" />
+    <Compile Include="Pipeline\Pipelets\Counting\NullCounter.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\AlwaysSatisfiedEventSpecification.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\CertainCategorisationFilter.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\CertainCategoryEventTookLongerThan.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\CertainCategoryFilter.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\FailureEventSpecification.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\IEventSpecification.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\IgnoreAdminEventsSpecification.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\NotSpecificEventTypeSpecification.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\NumberOfEventsGreaterThanSpecification.cs" />
+    <Compile Include="Pipeline\Pipelets\Filters\SuccessEventSpecification.cs" />
+    <Compile Include="Pipeline\Pipelets\Notification\AchievementUnlockedNotifier.cs" />
+    <Compile Include="Pipeline\Pipelets\Notification\ConsoleNotifier.cs" />
+    <Compile Include="Pipeline\Pipelets\Notification\INotifyBasedOnEvent.cs" />
+    <Compile Include="Pipeline\Pipelets\Counting\SpecificEventCountingPipelet.cs" />
+    <Compile Include="Pipeline\Pipelets\Counting\EventCountingPipelet.cs" />
+    <Compile Include="Pipeline\Pipelets\Counting\ICountEvents.cs" />
+    <Compile Include="Pipeline\Pipelets\IPipelet.cs" />
+    <Compile Include="Pipeline\IPipeline.cs" />
+    <Compile Include="Pipeline\LinearPipeline.cs" />
+    <Compile Include="Pipeline\Pipelets\Notification\NotificationPipelet.cs" />
+    <Compile Include="Pipeline\NullPipeline.cs" />
+    <Compile Include="Pipeline\Pipelets\Notification\NullNotifier.cs" />
+    <Compile Include="Pipeline\Pipelets\Publishing\PublishingPipelet.cs" />
+    <Compile Include="Pipeline\Pipelets\Splitters\NullSplitterDecisionMaker.cs" />
+    <Compile Include="Pipeline\QueuedEventsPipeline.cs" />
+    <Compile Include="Pipeline\ReflowOnEventPipeline.cs" />
+    <Compile Include="Pipeline\Pipelets\Splitters\IMakeSplitterDecisions.cs" />
+    <Compile Include="Pipeline\Pipelets\Splitters\SplitterPipelet.cs" />
+    <Compile Include="Pipeline\Pipelets\Actions\TriggerActionPipelet.cs" />
+    <Compile Include="Publishing\Default\BinaryFilePublisher.cs" />
+    <Compile Include="Publishing\Default\ConsolePublisher.cs" />
+    <Compile Include="Adapters\IPipelineAdapter.cs" />
+    <Compile Include="Publishing\IPublishEvents.cs" />
+    <Compile Include="Publishing\NullPublisher.cs" />
+    <Compile Include="Builders\SuccessEventReportingBuilder.cs" />
+    <Compile Include="Builders\TimeBasedEventReportingBuilder.cs" />
+    <Compile Include="Publishing\Publisher.cs" />
+    <Compile Include="Publishing\PublishingContext.cs" />
+    <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="Report.cs" />
+    <Compile Include="ReportInfoCollector.cs" />
+    <Compile Include="SystemTime.cs" />
+    <Compile Include="Track.cs" />
+    <Compile Include="Tracking\FolderPerIdentifierDistribution.cs" />
+    <Compile Include="Tracking\GuidFolderDistribution.cs" />
+    <Compile Include="Tracking\IFileDistributionAlgorithm.cs" />
+    <Compile Include="Tracking\IWriteTracking.cs" />
+    <Compile Include="Tracking\FileTrackingWriter.cs" />
+    <Compile Include="Tracking\IDefineTrackingNamingConvention.cs" />
+    <Compile Include="Tracking\DefaultTrackingNamingConvention.cs" />
+    <Compile Include="Tracking\NullTrackingWriter.cs" />
+    <Compile Include="Tracking\SingleFolderFileDistribution.cs" />
+    <Compile Include="TrackReportInfoCollector.cs" />
+    <Compile Include="TrackWritingInfoCollector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

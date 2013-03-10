@@ -1,0 +1,162 @@
+mode = :debug
+
+require 'albacore'
+require 'fileutils'
+require 'semver'
+require File.dirname(__FILE__) + "/build/versioning.rb"
+require File.dirname(__FILE__) + "/build/nugets.rb"
+require File.dirname(__FILE__) + "/build/solutions.rb"
+
+properties = {
+	:test_filter => "**/bin/" + mode.to_s() + "/**/*.Tests.dll",
+	:nuget_folder => "build/nuget",
+	:nuget_executable => "build/tools/nuget/nuget.exe"
+}
+
+
+Albacore.configure do |config|
+	config.msbuild.targets = [:clean, :build]
+	config.msbuild.verbosity = "minimal"
+
+	config.xunit.command = "build/tools/xunit/xunit.console.clr4.exe"
+end
+
+
+namespace :version do
+	task :default => [:assembly_info] do
+
+	end
+
+	assemblyinfo :assembly_info => [:versioning] do |asm|
+		  asm.product_name = "Puppy.Monitoring"
+		  asm.description = "Puppy.Monitoring"
+		  asm.version = ASSEMBLY_VERSION
+		  asm.file_version = FORMAL_VERSION
+		  asm.custom_attributes :AssemblyInformationalVersion => "#{BUILD_VERSION}",
+				:ComVisibleAttribute => false,
+			:CLSCompliantAttribute => false
+		  asm.output_file = 'build/AssemblyInfo.cs'
+		  asm.namespaces "System", "System.Reflection", "System.Runtime.InteropServices", "System.Security"
+	end
+end
+
+
+namespace :build do
+
+	task :build do
+		print "Found #{@solutions.length} solutions to build"
+
+		@solutions.each do |solution|
+			print "Building #{solution[:name]} (#{solution[:solution]}) \n"
+			msb = MSBuild.new
+			msb.properties = { :configuration => mode }
+			msb.solution = solution[:solution]
+			msb.execute
+		end
+
+	end
+
+end
+
+namespace :environment do
+	task :install_nuget_packages do
+	  FileList["**/packages.config"].each { |file_path|
+	  	print "Installing missing nuget packages based on #{file_path}\n"
+		sh "#{properties[:nuget_executable]} i #{file_path} -o packages"
+	  }
+	end
+
+	task :bump_version do
+		v = SemVer.find
+		v.patch += 1
+		v.save
+	end
+end
+
+namespace :nuget do
+	task :default => ['version:default', :specs, :pack] do
+	end
+
+	task :pack do
+
+		@nugets.each do |nuget|
+			spec_file = File.join(Dir.pwd, properties[:nuget_folder], "#{nuget[:package_id]}.#{NUGET_VERSION}.nuspec")
+			output_directory = File.join(Dir.pwd, properties[:nuget_folder])
+			base_path = File.join(Dir.pwd, nuget[:base_folder], "bin", mode.to_s)
+			nuget_parameters = "pack #{spec_file} -OutputDirectory #{output_directory} -BasePath #{base_path} -Version #{NUGET_VERSION} -Properties Configuration=Release -Symbols"
+
+			cmd = Exec.new
+			cmd.command = properties[:nuget_executable]
+			cmd.parameters = nuget_parameters
+			cmd.execute
+		end
+	end
+
+	task :specs do
+		FileUtils.rm_rf properties[:nuget_folder] if File.exists?(properties[:nuget_folder])
+		FileUtils.mkdir_p properties[:nuget_folder]
+
+		@nugets.each do |nuget|
+			nuspec = Nuspec.new
+			nuspec.id = nuget[:package_id]
+			nuspec.version = NUGET_VERSION
+			nuspec.authors = nuget[:authors]
+			nuspec.description = nuget[:description]
+			nuspec.projectUrl = 'https://github.com/rivethead/Puppy.Monitoring'
+			nuspec.language = "en-ZA"
+			nuspec.licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0"
+			nuspec.requireLicenseAcceptance = "false"
+
+			spec_file = File.join(Dir.pwd, properties[:nuget_folder], "#{nuget[:package_id]}.#{NUGET_VERSION}.nuspec")
+			nuspec.output_file = spec_file
+
+			nuget[:files].each do |f|
+				nuspec.file f[0], f[1]
+			end
+
+			nuget[:dependencies].each do |d|
+				nuspec.dependency d[0], d[1]
+			end
+
+			nuspec.execute
+		end
+	end
+end
+
+namespace :testing do
+	task :unit_tests do
+		@solutions.each do |solution|
+			print "Searching for tests for #{solution[:name]}\n"
+
+			Dir.glob(properties[:test_filter]).each do |test_assembly|
+				xunit = XUnitTestRunner.new
+				xunit.assembly = File.join(Dir.pwd, test_assembly)
+				xunit.execute
+			end
+
+		end
+	end
+end
+
+task :switch_to_release do
+	mode = :Release
+end
+
+desc "Getting started"
+task :start => ['environment:install_nuget_packages'] do end
+
+desc "Only builds"
+task :default => [
+	'environment:install_nuget_packages',
+	'build:build' 
+	] do
+end		
+
+desc "Run debug build"	
+task :debug => [:default, 'testing:unit_tests'] do end
+
+desc "Run release build" 	
+task :release => [:switch_to_release, :default, 'testing:unit_tests'] do end
+
+desc "Release build with nuget packaging"
+task :pack => ['environment:bump_version', :release, 'nuget:default'] do end
