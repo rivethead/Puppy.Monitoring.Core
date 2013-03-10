@@ -9,7 +9,7 @@
 			['Puppy.Monitoring.pdb', 'lib\net45'],
 		],
 		:dependencies => [
-			['Common.Logging', '(2.1.1,2.12)']
+			['Common.Logging', '[2.1.1,2.12]']
 		]
 	},
 	{
