@@ -77,6 +77,26 @@ namespace :nuget do
 	task :default => ['version:default', :specs, :pack] do
 	end
 
+	task :push => ['version:default', :specs, :pack] do
+		@nugets.each do |nuget|
+			package_file = File.join(Dir.pwd, properties[:nuget_folder], "#{nuget[:package_id]}.#{NUGET_VERSION}.nupkg")
+			puts "Pushing #{package_file}"
+
+			if(!File.exists?(package_file))
+				puts "FILE DOES NOT EXIST"
+			end
+
+			pusher = NuGetPush.new
+			pusher.command = properties[:nuget_executable]
+			pusher.package = package_file
+			pusher.apikey = "0c0035c0-5c6e-444f-9ed5-ee70585fd7b1"
+			pusher.create_only = false
+			pusher.source = nil
+
+			pusher.execute
+		end
+	end
+
 	task :pack do
 
 		@nugets.each do |nuget|
@@ -102,7 +122,7 @@ namespace :nuget do
 			nuspec.version = NUGET_VERSION
 			nuspec.authors = nuget[:authors]
 			nuspec.description = nuget[:description]
-			nuspec.projectUrl = 'https://github.com/rivethead/Puppy.Monitoring'
+			nuspec.projectUrl = nuget[:web_site]
 			nuspec.language = "en-ZA"
 			nuspec.licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0"
 			nuspec.requireLicenseAcceptance = "false"
@@ -160,3 +180,6 @@ task :release => [:switch_to_release, :default, 'testing:unit_tests'] do end
 
 desc "Release build with nuget packaging"
 task :pack => ['environment:bump_version', :release, 'nuget:default'] do end
+
+desc "Release build with nuget packages and push to nuget.org"
+task :fly => ['environment:bump_version', :release, 'nuget:push'] do end
