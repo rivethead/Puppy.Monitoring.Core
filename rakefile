@@ -91,7 +91,7 @@ namespace :nuget do
 			pusher.package = package_file
 			pusher.apikey = "0c0035c0-5c6e-444f-9ed5-ee70585fd7b1"
 			pusher.create_only = false
-			pusher.source = nil
+			pusher.source = "http://nuget.gw.symbolsource.org/Public/Nuget"
 
 			pusher.execute
 		end
@@ -168,14 +168,14 @@ task :start => ['environment:install_nuget_packages'] do end
 desc "Only builds"
 task :default => [
 	'environment:install_nuget_packages',
-	'build:build' 
+	'build:build'
 	] do
-end		
+end
 
-desc "Run debug build"	
+desc "Run debug build"
 task :debug => [:default, 'testing:unit_tests'] do end
 
-desc "Run release build" 	
+desc "Run release build"
 task :release => [:switch_to_release, :default, 'testing:unit_tests'] do end
 
 desc "Release build with nuget packaging"
